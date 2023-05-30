@@ -54,10 +54,8 @@ type (
 	}
 
 	NodeSignature struct {
-		Signature   string
-		Data        string
-		NodePubKeyX string
-		NodePubKeyY string
+		Signature string
+		Data      string
 		// TED
 		NodePubX string
 		NodePubY string
@@ -66,12 +64,12 @@ type (
 		Item []bijson.RawMessage `json:"item"`
 	}
 	ShareRequestItem struct {
-		Token              string          `json:"token"`
+		IDToken            string          `json:"idtoken"`
 		NodeSignatures     []NodeSignature `json:"nodesignatures"`
 		VerifierIdentifier string          `json:"verifieridentifier"`
 	}
 	ShareRequestResult struct {
-		Keys []KeyAssignment
+		Keys []KeyAssignment `json:"keys"`
 	}
 
 	CommitmentRequestHandler struct {
@@ -144,10 +142,10 @@ func (nodeSig *NodeSignature) NodeValidation(suite *Suite) (*NodeReference, erro
 	nodeRegister := suite.EthSuite.EpochNodeRegister[suite.EthSuite.CurrentEpoch]
 	for _, currNode := range nodeRegister.NodeList {
 		logging.Debugf("currNode X, Y: %s, %s", currNode.PublicKey.X.Text(16), currNode.PublicKey.Y.Text(16))
-		logging.Debugf("nodeSig X, Y: %s, %s", nodeSig.NodePubKeyX, nodeSig.NodePubKeyY)
+		logging.Debugf("nodeSig X, Y: %s, %s", nodeSig.NodePubX, nodeSig.NodePubY)
 
-		if currNode.PublicKey.X.Text(16) == nodeSig.NodePubKeyX &&
-			currNode.PublicKey.Y.Text(16) == nodeSig.NodePubKeyY {
+		if currNode.PublicKey.X.Text(16) == nodeSig.NodePubX &&
+			currNode.PublicKey.Y.Text(16) == nodeSig.NodePubY {
 			node = currNode
 		}
 	}

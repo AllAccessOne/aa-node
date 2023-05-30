@@ -188,7 +188,7 @@ func (h ShareRequestHandler) ServeJSONRPC(c context.Context, params *bijson.RawM
 		}
 		var commonData = strings.Split(commonDataString, "|")
 		var commonTokenCommitment = commonData[1]
-		var commonTimestamp = commonData[2]
+		// var commonTimestamp = commonData[2]
 		var commonVerifierIdentifier = commonData[3]
 
 		// Lookup verifier
@@ -198,7 +198,7 @@ func (h ShareRequestHandler) ServeJSONRPC(c context.Context, params *bijson.RawM
 		}
 
 		// verify that hash of token = tokenCommitment
-		cleanedToken := verifier.CleanToken(parsedVerifierParams.Token)
+		cleanedToken := verifier.CleanToken(parsedVerifierParams.IDToken)
 		logging.Debugf("hex.EncodeToString(secp256k1.Keccak256([]byte(cleanedToken))): %s", hex.EncodeToString(secp256k1.Keccak256([]byte(cleanedToken))))
 		logging.Debugf("commonTokenCommitment: %s", commonTokenCommitment)
 		if hex.EncodeToString(secp256k1.Keccak256([]byte(cleanedToken))) != commonTokenCommitment {
@@ -206,13 +206,14 @@ func (h ShareRequestHandler) ServeJSONRPC(c context.Context, params *bijson.RawM
 		}
 
 		// verify token timestamp
-		sec, err := strconv.ParseInt(commonTimestamp, 10, 64)
-		if err != nil {
-			return nil, &jsonrpc.Error{Code: 32603, Message: "Internal error", Data: "Could not parse timestamp"}
-		}
-		if h.TimeNow().After(time.Unix(sec+60, 0)) {
-			return nil, &jsonrpc.Error{Code: 32603, Message: "Internal error", Data: "Expired token (> 60 seconds)"}
-		}
+		// TED: Disable when build production
+		// sec, err := strconv.ParseInt(commonTimestamp, 10, 64)
+		// if err != nil {
+		// 	return nil, &jsonrpc.Error{Code: 32603, Message: "Internal error", Data: "Could not parse timestamp"}
+		// }
+		// if h.TimeNow().After(time.Unix(sec+60, 0)) {
+		// 	return nil, &jsonrpc.Error{Code: 32603, Message: "Internal error", Data: "Expired token (> 60 seconds)"}
+		// }
 
 		// Get back list of indexes
 		res, err := h.suite.BftSuite.BftRPC.ABCIQuery("GetIndexesFromVerifierID", []byte(verifierID)) // TODO: len
@@ -253,7 +254,6 @@ func (h ShareRequestHandler) ServeJSONRPC(c context.Context, params *bijson.RawM
 			}
 		}
 		si, _, pk, err := h.suite.DBSuite.Instance.RetrieveCompletedShare(*index)
-		logging.Debugf("pkpkpkpkpk: %s %s", pk.X.Text(16), pk.Y.Text(16))
 		addr, _ := common.PointToEthAddress(*pk)
 		logging.Debugf("PointToEthAddress: %s", addr.String())
 		if err != nil {

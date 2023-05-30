@@ -45,8 +45,8 @@ type GoogleVerifier struct {
 
 // GoogleVerifierParams - expected params for the google verifier
 type GoogleVerifierParams struct {
-	IDToken string `json:"idtoken"`
-	Email   string `json:"email"`
+	IDToken    string `json:"idtoken"`
+	VerifierID string `json:"verifier_id"`
 }
 
 // GetIdentifier - get identifier string for verifier
@@ -68,7 +68,7 @@ func (g *GoogleVerifier) VerifyRequestIdentity(rawPayload *bijson.RawMessage) (b
 
 	p.IDToken = g.CleanToken(p.IDToken)
 
-	if p.Email == "" || p.IDToken == "" {
+	if p.VerifierID == "" || p.IDToken == "" {
 		return false, "", errors.New("invalid payload parameters")
 	}
 
@@ -100,11 +100,11 @@ func (g *GoogleVerifier) VerifyRequestIdentity(rawPayload *bijson.RawMessage) (b
 	// if strings.Compare(g.clientID, body.Azp) != 0 {
 	// 	return false, "", errors.New("azip is not clientID " + body.Azp + " " + g.clientID)
 	// }
-	// if strings.Compare(p.Email, body.Email) != 0 {
-	// 	return false, "", errors.New("email not equal to body.email " + p.Email + " " + body.Email)
+	// if strings.Compare(p.VerifierID, body.Email) != 0 {
+	// 	return false, "", errors.New("email not equal to body.email " + p.VerifierID + " " + body.VerifierID)
 	// }
 
-	return true, p.Email, nil
+	return true, p.VerifierID, nil
 }
 
 // NewDefaultGoogleVerifier - Constructor for the default google verifier
