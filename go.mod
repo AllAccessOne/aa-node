@@ -1,8 +1,9 @@
-module github.com/torusresearch/torus-public
+module github.com/allaccessone/network
 
 go 1.12
 
 replace (
+	github.com/census-instrumentation/opencensus-proto v0.1.0-0.20181214143942-ba49f56771b8 => github.com/census-instrumentation/opencensus-proto v0.0.3-0.20181214143942-ba49f56771b8
 	github.com/tendermint/tendermint => github.com/YZhenY/tendermint v0.26.4-0.20190301084305-d515ebbc4bde
 	github.com/testcontainers/testcontainer-go => github.com/testcontainers/testcontainers-go v0.0.0-20190108154635-47c0da630f72
 )
@@ -56,7 +57,7 @@ require (
 	github.com/syndtr/goleveldb v1.0.0
 	github.com/tendermint/btcd v0.1.1
 	github.com/tendermint/go-amino v0.14.1 // indirect
-	github.com/tendermint/tendermint v0.29.1
+	github.com/tendermint/tendermint v0.35.9
 	github.com/tidwall/gjson v1.2.1
 	github.com/tidwall/match v1.0.1 // indirect
 	github.com/tidwall/pretty v0.0.0-20180105212114-65a9db5fad51 // indirect

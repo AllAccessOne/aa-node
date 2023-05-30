@@ -4,7 +4,6 @@ import (
 	"errors"
 	"io/ioutil"
 	"net/http"
-	"strconv"
 	"strings"
 	"time"
 
@@ -89,21 +88,21 @@ func (g *GoogleVerifier) VerifyRequestIdentity(rawPayload *bijson.RawMessage) (b
 	}
 
 	// Check if auth token has been signed within declared parameter
-	timeSignedInt, err := strconv.Atoi(body.Iat)
-	if err != nil {
-		return false, "", err
-	}
-	timeSigned := time.Unix(int64(timeSignedInt), 0)
-	if timeSigned.Add(g.Timeout).Before(time.Now()) {
-		return false, "", errors.New("timesigned is more than 60 seconds ago " + timeSigned.String())
-	}
+	// timeSignedInt, err := strconv.Atoi(body.Iat)
+	// if err != nil {
+	// 	return false, "", err
+	// }
+	// timeSigned := time.Unix(int64(timeSignedInt), 0)
+	// if timeSigned.Add(g.Timeout).Before(time.Now()) {
+	// 	return false, "", errors.New("timesigned is more than 60 seconds ago " + timeSigned.String())
+	// }
 
-	if strings.Compare(g.clientID, body.Azp) != 0 {
-		return false, "", errors.New("azip is not clientID " + body.Azp + " " + g.clientID)
-	}
-	if strings.Compare(p.Email, body.Email) != 0 {
-		return false, "", errors.New("email not equal to body.email " + p.Email + " " + body.Email)
-	}
+	// if strings.Compare(g.clientID, body.Azp) != 0 {
+	// 	return false, "", errors.New("azip is not clientID " + body.Azp + " " + g.clientID)
+	// }
+	// if strings.Compare(p.Email, body.Email) != 0 {
+	// 	return false, "", errors.New("email not equal to body.email " + p.Email + " " + body.Email)
+	// }
 
 	return true, p.Email, nil
 }

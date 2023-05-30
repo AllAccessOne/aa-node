@@ -5,11 +5,11 @@ import (
 	"errors"
 	"time"
 
+	"github.com/allaccessone/network/logging"
 	"github.com/tendermint/tendermint/node"
 	"github.com/tendermint/tendermint/rpc/client"
 	rpcclient "github.com/tendermint/tendermint/rpc/lib/client"
 	"github.com/tidwall/gjson"
-	"github.com/torusresearch/torus-public/logging"
 )
 
 type BftSuite struct {

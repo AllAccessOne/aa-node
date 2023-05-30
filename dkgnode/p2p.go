@@ -7,9 +7,9 @@ import (
 	"math/big"
 	"time"
 
+	"github.com/allaccessone/network/logging"
 	ethCommon "github.com/ethereum/go-ethereum/common"
 	pstore "github.com/libp2p/go-libp2p-peerstore"
-	"github.com/torusresearch/torus-public/logging"
 
 	libp2p "github.com/libp2p/go-libp2p"
 	crypto "github.com/libp2p/go-libp2p-crypto"

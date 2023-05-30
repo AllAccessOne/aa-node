@@ -8,12 +8,12 @@ import (
 	"math/big"
 	"net"
 
+	"github.com/allaccessone/network/common"
+	"github.com/allaccessone/network/logging"
+	"github.com/allaccessone/network/secp256k1"
 	"github.com/ethereum/go-ethereum/accounts/abi"
 	ethMath "github.com/ethereum/go-ethereum/common/math"
 	ethCrypto "github.com/ethereum/go-ethereum/crypto"
-	"github.com/torusresearch/torus-public/common"
-	"github.com/torusresearch/torus-public/logging"
-	"github.com/torusresearch/torus-public/secp256k1"
 )
 
 type ECDSASignature struct {

@@ -1,11 +1,12 @@
 package dkgnode
 
 import (
+	"testing"
+
+	"github.com/allaccessone/network/pvss"
 	crypto "github.com/libp2p/go-libp2p-crypto"
 	peer "github.com/libp2p/go-libp2p-peer"
 	"github.com/torusresearch/bijson"
-	"github.com/torusresearch/torus-public/pvss"
-	"testing"
 )
 
 var basicDummyMsg = P2PBasicMsg{

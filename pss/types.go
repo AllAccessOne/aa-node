@@ -7,11 +7,11 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/torusresearch/torus-public/idmutex"
+	"github.com/allaccessone/network/idmutex"
 
+	"github.com/allaccessone/network/common"
+	"github.com/allaccessone/network/secp256k1"
 	"github.com/torusresearch/bijson"
-	"github.com/torusresearch/torus-public/common"
-	"github.com/torusresearch/torus-public/secp256k1"
 )
 
 // Dont try to cast strings or bools, use the exported structs to get the types you need

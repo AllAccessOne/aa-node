@@ -6,13 +6,12 @@ import (
 	"math/big"
 	"strconv"
 
+	"github.com/allaccessone/network/common"
+	"github.com/allaccessone/network/pvss"
+	"github.com/allaccessone/network/secp256k1"
 	ethCommon "github.com/ethereum/go-ethereum/common"
 	config "github.com/micro/go-config"
 	"github.com/micro/go-config/source/file"
-	"github.com/torusresearch/torus-public/common"
-	"github.com/torusresearch/torus-public/pvss"
-	"github.com/torusresearch/torus-public/secp256k1"
-	"github.com/torusresearch/torus-public/solidity/goContracts"
 	jsonrpcclient "github.com/ybbus/jsonrpc"
 )
 

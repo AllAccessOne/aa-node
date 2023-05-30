@@ -7,8 +7,8 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"github.com/torusresearch/torus-public/common"
-	"github.com/torusresearch/torus-public/secp256k1"
+	"github.com/allaccessone/network/common"
+	"github.com/allaccessone/network/secp256k1"
 )
 
 func TestPedersonCommitment(t *testing.T) {

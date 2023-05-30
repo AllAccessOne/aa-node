@@ -5,17 +5,17 @@ import (
 	"math/big"
 	"strconv"
 
+	"github.com/allaccessone/network/logging"
 	"github.com/google/go-cmp/cmp"
 	"github.com/google/go-cmp/cmp/cmpopts"
 	"github.com/pkg/errors"
 	tmbtcec "github.com/tendermint/btcd/btcec"
 	"github.com/tendermint/tendermint/abci/types"
 	"github.com/tendermint/tendermint/libs/common"
-	"github.com/torusresearch/torus-public/logging"
 )
 
-//Validates transactions to be delivered to the BFT. is the master switch for all tx
-//TODO: create variables for types here and in bftrpc.go
+// Validates transactions to be delivered to the BFT. is the master switch for all tx
+// TODO: create variables for types here and in bftrpc.go
 func (app *ABCIApp) ValidateAndUpdateAndTagBFTTx(tx []byte) (bool, *[]common.KVPair, error) {
 	var tags []common.KVPair
 	if bytes.Compare(tx[:len([]byte("mug00"))], []byte("mug00")) != 0 {
@@ -68,6 +68,8 @@ func (app *ABCIApp) ValidateAndUpdateAndTagBFTTx(tx []byte) (bool, *[]common.KVP
 		// 	return false, &tags, errors.New("Email " + assignmentTx.Email + " has already been assigned")
 		// }
 
+		logging.Debug("TED key assign")
+		// TED: assign user email to key index
 		// assign user email to key index
 		if app.state.LastUnassignedIndex >= app.state.LastCreatedIndex {
 			return false, &tags, errors.New("Last assigned index is exceeding last created index")

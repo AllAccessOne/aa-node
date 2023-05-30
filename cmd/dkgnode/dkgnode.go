@@ -1,8 +1,8 @@
 package main
 
 import (
-	"github.com/torusresearch/torus-public/dkgnode"
-	"github.com/torusresearch/torus-public/logging"
+	"github.com/allaccessone/network/dkgnode"
+	"github.com/allaccessone/network/logging"
 )
 
 func main() {

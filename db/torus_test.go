@@ -8,8 +8,8 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/torusresearch/torus-public/common"
-	"github.com/torusresearch/torus-public/keygen"
+	"github.com/allaccessone/network/common"
+	"github.com/allaccessone/network/keygen"
 )
 
 func randBigInt() *big.Int {

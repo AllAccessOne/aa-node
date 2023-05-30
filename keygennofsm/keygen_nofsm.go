@@ -11,11 +11,11 @@ import (
 
 	"fmt"
 
+	"github.com/allaccessone/network/common"
+	"github.com/allaccessone/network/logging"
+	"github.com/allaccessone/network/pvss"
+	"github.com/allaccessone/network/secp256k1"
 	"github.com/torusresearch/bijson"
-	"github.com/torusresearch/torus-public/common"
-	"github.com/torusresearch/torus-public/logging"
-	"github.com/torusresearch/torus-public/pvss"
-	"github.com/torusresearch/torus-public/secp256k1"
 )
 
 // max(roundUp((n+t+1)/2), k)

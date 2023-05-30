@@ -9,12 +9,12 @@ import (
 	"strconv"
 	"time"
 
+	"github.com/allaccessone/network/common"
+	"github.com/allaccessone/network/idmutex"
+	"github.com/allaccessone/network/logging"
+	"github.com/allaccessone/network/pvss"
 	"github.com/looplab/fsm"
 	"github.com/torusresearch/bijson"
-	"github.com/torusresearch/torus-public/common"
-	"github.com/torusresearch/torus-public/idmutex"
-	"github.com/torusresearch/torus-public/logging"
-	"github.com/torusresearch/torus-public/pvss"
 )
 
 type KeyIndex string
@@ -215,6 +215,7 @@ func NewAVSSKeygen(startingIndex big.Int, numOfKeys int, nodeIndexes []big.Int, 
 
 // TODO: Potentially Stuff specific KEYGEN Debugger | set up transport here as well & store
 func (ki *KeygenInstance) InitiateKeygen() error {
+	logging.Debugf("InitiateKeygen")
 	ki.Lock()
 	defer ki.Unlock()
 	// prepare commitmentMatrixes for broadcast
@@ -247,6 +248,7 @@ func (ki *KeygenInstance) InitiateKeygen() error {
 }
 
 func (ki *KeygenInstance) OnInitiateKeygen(msg KEYGENInitiate, nodeIndex big.Int) error {
+	logging.Debugf("OnInitiateKeygen")
 	ki.Lock()
 	defer ki.Unlock()
 	// Only accept onInitiate on Standby phase to only accept initiate keygen once from one node index
@@ -292,8 +294,10 @@ func (ki *KeygenInstance) OnInitiateKeygen(msg KEYGENInitiate, nodeIndex big.Int
 }
 
 func (ki *KeygenInstance) prepareAndSendKEYGENSend() error {
+	logging.Debugf("prepareAndSendKEYGENSend")
+
 	// send all KEGENSends to  respective nodes
-	// logging.Debugf("NODE" + ki.NodeIndex.Text(16) + " Sending KEYGENSends")
+	logging.Debugf("KeygenInstance NODE " + ki.NodeIndex.Text(16) + " Sending KEYGENSends")
 	for i := int(ki.StartIndex.Int64()); i < ki.NumOfKeys+int(ki.StartIndex.Int64()); i++ {
 		keyIndex := big.NewInt(int64(i))
 		committedSecrets := ki.Secrets[keyIndex.Text(16)]
@@ -321,6 +325,7 @@ func (ki *KeygenInstance) prepareAndSendKEYGENSend() error {
 }
 
 func (ki *KeygenInstance) OnKEYGENSend(msg KEYGENSend, fromNodeIndex big.Int) error {
+	logging.Debugf("OnKEYGENSend %v %s", msg, fromNodeIndex)
 	ki.Lock()
 	defer ki.Unlock()
 	keyLog, ok := ki.KeyLog[msg.KeyIndex.Text(16)][fromNodeIndex.Text(16)]
@@ -445,7 +450,7 @@ func (ki *KeygenInstance) OnKEYGENEcho(msg KEYGENEcho, fromNodeIndex big.Int) er
 			bixPoints := make([]common.Point, ki.Threshold)
 			biprimexPoints := make([]common.Point, ki.Threshold)
 			count := 0
-	
+
 			for k, v := range ki.KeyLog[index.Text(16)][nodeIndex.Text(16)].ReceivedEchoes {
 				if count < ki.Threshold {
 					fromNodeInt := big.Int{}
@@ -457,7 +462,7 @@ func (ki *KeygenInstance) OnKEYGENEcho(msg KEYGENEcho, fromNodeIndex big.Int) er
 				}
 				count++
 			}
-	
+
 			aiy := pvss.LagrangeInterpolatePolynomial(bixPoints)
 			aiprimey := pvss.LagrangeInterpolatePolynomial(biprimexPoints)
 			bix := pvss.LagrangeInterpolatePolynomial(aiyPoints)
@@ -469,7 +474,7 @@ func (ki *KeygenInstance) OnKEYGENEcho(msg KEYGENEcho, fromNodeIndex big.Int) er
 				BIX:      common.PrimaryPolynomial{Threshold: ki.Threshold, Coeff: bix},
 				BIprimeX: common.PrimaryPolynomial{Threshold: ki.Threshold, Coeff: biprimex},
 			}
-	
+
 			// correctPoly := pvss.AVSSVerifyPoly(
 			// 	ki.KeyLog[index.Text(16)][nodeIndex.Text(16)].C,
 			// 	ki.NodeIndex,
@@ -578,7 +583,7 @@ func (ki *KeygenInstance) OnKEYGENReady(msg KEYGENReady, fromNodeIndex big.Int) 
 			bixPoints := make([]common.Point, ki.Threshold)
 			biprimexPoints := make([]common.Point, ki.Threshold)
 			count := 0
-	
+
 			for k, v := range ki.KeyLog[index.Text(16)][nodeIndex.Text(16)].ReceivedReadys {
 				if count < ki.Threshold {
 					fromNodeInt := big.Int{}
@@ -590,7 +595,7 @@ func (ki *KeygenInstance) OnKEYGENReady(msg KEYGENReady, fromNodeIndex big.Int) 
 				}
 				count++
 			}
-	
+
 			aiy := pvss.LagrangeInterpolatePolynomial(bixPoints)
 			aiprimey := pvss.LagrangeInterpolatePolynomial(biprimexPoints)
 			bix := pvss.LagrangeInterpolatePolynomial(aiyPoints)
@@ -602,7 +607,7 @@ func (ki *KeygenInstance) OnKEYGENReady(msg KEYGENReady, fromNodeIndex big.Int) 
 				BIX:      common.PrimaryPolynomial{Threshold: ki.Threshold, Coeff: bix},
 				BIprimeX: common.PrimaryPolynomial{Threshold: ki.Threshold, Coeff: biprimex},
 			}
-	
+
 			// correctPoly := pvss.AVSSVerifyPoly(
 			// 	ki.KeyLog[index.Text(16)][nodeIndex.Text(16)].C,
 			// 	ki.NodeIndex,
@@ -806,6 +811,7 @@ func (ki *KeygenInstance) OnKEYGENDKGComplete(msg KEYGENDKGComplete, fromNodeInd
 }
 
 func (ki *KeygenInstance) endKeygen() {
+	logging.Debugf("endKeygen")
 	// check if final node set shares are all in
 	allIn := true
 	for _, nodeIndex := range ki.FinalNodeSet {
@@ -854,7 +860,13 @@ func (ki *KeygenInstance) endKeygen() {
 				break
 			}
 		}
+		logging.Debugf("indexes: %s", indexes)
+		fmt.Println("The array is:")
+		for i, v := range indexes {
+			fmt.Printf("array[%d] = %d\n", i, v)
+		}
 		pk = *pvss.LagrangeCurvePts(indexes, points)
+		logging.Debugf("pk X, Y: %s %s", pk.X.Text(16), pk.Y.Text(16))
 
 		err := ki.Store.StoreCompletedShare(keyIndex, *si, *siprime, pk)
 		if err != nil {

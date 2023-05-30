@@ -7,8 +7,8 @@ import (
 	// "strconv"
 	"time"
 
-	"github.com/torusresearch/torus-public/logging"
-	"github.com/torusresearch/torus-public/pss"
+	"github.com/allaccessone/network/logging"
+	"github.com/allaccessone/network/pss"
 )
 
 type NodeListUpdates struct {
@@ -36,7 +36,7 @@ func startKeyGenerationMonitor(suite *Suite, keyGenMonitorUpdates chan KeyGenUpd
 
 		percentLeft := 100 * (suite.ABCIApp.state.LastCreatedIndex - suite.ABCIApp.state.LastUnassignedIndex) / uint(suite.Config.KeysPerEpoch)
 		if percentLeft > uint(suite.Config.KeyBufferTriggerPercentage) {
-			logging.Debugf("KEYGEN: keygeneration trigger percent left not reached %d", percentLeft)
+			// logging.Debugf("KEYGEN startKeyGenerationMonitor: keygeneration trigger percent left not reached %d", percentLeft)
 			continue
 		}
 		startingIndex := int(suite.ABCIApp.state.LastCreatedIndex)
@@ -165,7 +165,9 @@ func keyGenMonitor(suite *Suite, tmCoreMsgs <-chan string, tickerChan <-chan tim
 
 		percentLeft := 100 * (suite.ABCIApp.state.LastCreatedIndex - suite.ABCIApp.state.LastUnassignedIndex) / uint(suite.Config.KeysPerEpoch)
 		if percentLeft > uint(suite.Config.KeyBufferTriggerPercentage) {
-			logging.Debugf("KEYGEN: keygeneration trigger percent left not reached %d", percentLeft)
+			// logging.Debugf("suite.ABCIApp.state.LastCreatedIndex %d, suite.ABCIApp.state.LastUnassignedIndex %d, suite.Config.KeysPerEpoch %d", suite.ABCIApp.state.LastCreatedIndex, suite.ABCIApp.state.LastUnassignedIndex, suite.Config.KeysPerEpoch)
+			// logging.Debugf("suite.Config.KeyBufferTriggerPercentage %d", uint(suite.Config.KeyBufferTriggerPercentage))
+			// logging.Debugf("KEYGEN keyGenMonitor: keygeneration trigger percent left not reached %d", percentLeft)
 			continue
 		}
 		startingIndex := int(suite.ABCIApp.state.LastCreatedIndex)

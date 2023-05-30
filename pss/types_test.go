@@ -5,9 +5,9 @@ import (
 	"reflect"
 	"testing"
 
+	"github.com/allaccessone/network/common"
 	"github.com/stretchr/testify/assert"
 	"github.com/torusresearch/bijson"
-	"github.com/torusresearch/torus-public/common"
 )
 
 func TestTypeSerialization(t *testing.T) {

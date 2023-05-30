@@ -3,9 +3,10 @@ package db
 import (
 	"math/big"
 
+	"github.com/allaccessone/network/common"
+	"github.com/allaccessone/network/keygen"
+	"github.com/allaccessone/network/logging"
 	"github.com/torusresearch/bijson"
-	"github.com/torusresearch/torus-public/common"
-	"github.com/torusresearch/torus-public/keygen"
 )
 
 // To store necessary shares and secrets
@@ -81,6 +82,7 @@ func (c *completedShare) UnmarshalBinary(data []byte) error {
 }
 
 func (t *TorusLDB) StoreCompletedShare(keyIndex big.Int, si big.Int, siprime big.Int, publicKey common.Point) error {
+	logging.Debugf("StoreCompletedShare keyIndex %s: ", keyIndex)
 	keyIndexBytes := keyIndex.Bytes()
 	completedShareKey := append(keyIndexBytes, completedShareKeyBytes)
 

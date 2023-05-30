@@ -9,14 +9,14 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/allaccessone/network/common"
+	"github.com/allaccessone/network/logging"
+	"github.com/allaccessone/network/pvss"
 	"github.com/gorilla/mux"
 	"github.com/mholt/certmagic"
 	"github.com/patrickmn/go-cache"
 	"github.com/rs/cors"
 	"github.com/torusresearch/jsonrpc"
-	"github.com/torusresearch/torus-public/common"
-	"github.com/torusresearch/torus-public/logging"
-	"github.com/torusresearch/torus-public/pvss"
 )
 
 func setUpRouter(suite *Suite) http.Handler {

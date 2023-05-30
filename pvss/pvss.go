@@ -11,10 +11,10 @@ import (
 	"math/big"
 	"sort"
 
+	"github.com/allaccessone/network/common"
+	"github.com/allaccessone/network/logging"
+	"github.com/allaccessone/network/secp256k1"
 	ethCrypto "github.com/ethereum/go-ethereum/crypto"
-	"github.com/torusresearch/torus-public/common"
-	"github.com/torusresearch/torus-public/logging"
-	"github.com/torusresearch/torus-public/secp256k1"
 )
 
 func RandomPoly(secret big.Int, threshold int) *common.PrimaryPolynomial {

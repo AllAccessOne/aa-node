@@ -5,6 +5,9 @@ import (
 	"fmt"
 	"math/big"
 
+	"github.com/allaccessone/network/common"
+	"github.com/allaccessone/network/logging"
+	"github.com/allaccessone/network/secp256k1"
 	tmbtcec "github.com/tendermint/btcd/btcec"
 	"github.com/tendermint/tendermint/abci/example/code"
 	"github.com/tendermint/tendermint/abci/types"
@@ -12,9 +15,6 @@ import (
 	dbm "github.com/tendermint/tendermint/libs/db"
 	"github.com/tendermint/tendermint/version"
 	"github.com/torusresearch/bijson"
-	"github.com/torusresearch/torus-public/common"
-	"github.com/torusresearch/torus-public/logging"
-	"github.com/torusresearch/torus-public/secp256k1"
 )
 
 var (

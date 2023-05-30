@@ -4,29 +4,34 @@ import (
 	"errors"
 	"math/big"
 	"net/http"
-	"strconv"
 	"strings"
 	"time"
 
+	"github.com/allaccessone/network/logging"
+	"github.com/allaccessone/network/secp256k1"
 	"github.com/torusresearch/bijson"
 	"github.com/torusresearch/jsonrpc"
-	"github.com/torusresearch/torus-public/secp256k1"
 )
 
 const PingMethod = "Ping"
 const ShareRequestMethod = "ShareRequest"
 const KeyAssignMethod = "KeyAssign"
+const VerifierLookupMethod = "VerifierLookupRequest"
 const CommitmentRequestMethod = "CommitmentRequest"
 
 type (
 	PingHandler struct {
 		ethSuite *EthSuite
+		suite    *Suite
 	}
 	PingParams struct {
 		Message string `json:"message"`
 	}
 	PingResult struct {
-		Message string `json:"message"`
+		Message   string `json:"message"`
+		NodePubX  string `json:"nodepubx"`
+		NodePubY  string `json:"nodepuby"`
+		NodeIndex string `json:"nodeindex"`
 	}
 	SigncryptedHandler struct {
 		suite *Suite
@@ -53,6 +58,9 @@ type (
 		Data        string
 		NodePubKeyX string
 		NodePubKeyY string
+		// TED
+		NodePubX string
+		NodePubY string
 	}
 	ShareRequestParams struct {
 		Item []bijson.RawMessage `json:"item"`
@@ -105,10 +113,29 @@ type (
 		KeyIndex  string `json:"key_index"`
 		PubShareX string `json:"pub_share_X"`
 		PubShareY string `json:"pub_share_Y"`
+		PubKeyX   string `json:"pub_key_X"`
+		PubKeyY   string `json:"pub_key_Y"`
 		Address   string `json:"address"`
 	}
 	KeyAssignResult struct {
 		Keys []KeyAssignItem `json:"keys"`
+	}
+	VerifierLookupResult struct {
+		Keys []VerifierLookupItem `json:"keys"`
+	}
+
+	VerifierLookupHandler struct {
+		suite *Suite
+	}
+	VerifierLookupParams struct {
+		Verifier   string `json:"verifier"`
+		VerifierID string `json:"verifier_id"`
+	}
+	VerifierLookupItem struct {
+		KeyIndex  string `json:"key_index"`
+		PubShareX string `json:"pub_share_X"`
+		PubShareY string `json:"pub_share_Y"`
+		Address   string `json:"address"`
 	}
 )
 
@@ -116,11 +143,15 @@ func (nodeSig *NodeSignature) NodeValidation(suite *Suite) (*NodeReference, erro
 	var node *NodeReference
 	nodeRegister := suite.EthSuite.EpochNodeRegister[suite.EthSuite.CurrentEpoch]
 	for _, currNode := range nodeRegister.NodeList {
+		logging.Debugf("currNode X, Y: %s, %s", currNode.PublicKey.X.Text(16), currNode.PublicKey.Y.Text(16))
+		logging.Debugf("nodeSig X, Y: %s, %s", nodeSig.NodePubKeyX, nodeSig.NodePubKeyY)
+
 		if currNode.PublicKey.X.Text(16) == nodeSig.NodePubKeyX &&
 			currNode.PublicKey.Y.Text(16) == nodeSig.NodePubKeyY {
 			node = currNode
 		}
 	}
+
 	if node == nil {
 		return nil, errors.New("Node not found")
 	}
@@ -148,20 +179,21 @@ func (nodeSig *NodeSignature) NodeValidation(suite *Suite) (*NodeReference, erro
 	if !ok {
 		return nil, errors.New("Could not parse data from string")
 	}
-	timestamp, err := strconv.ParseInt(commitmentRequestResultData.Timestamp, 10, 64)
-	if err != nil {
-		return nil, &jsonrpc.Error{Code: 32603, Message: "Internal error", Data: "Could not parse timestamp"}
-	}
-	now, err := strconv.ParseInt(commitmentRequestResultData.TimeSigned, 10, 64)
-	if err != nil {
-		return nil, &jsonrpc.Error{Code: 32603, Message: "Internal error", Data: "Could not parse timestamp"}
-	}
-	if time.Unix(now, 0).Before(time.Unix(timestamp, 0)) {
-		return nil, &jsonrpc.Error{Code: 32603, Message: "Internal error", Data: "Node signed before timestamp"}
-	}
-	if time.Unix(now, 0).After(time.Unix(timestamp+60, 0)) {
-		return nil, &jsonrpc.Error{Code: 32603, Message: "Internal error", Data: "Node took too long to sign (> 60 seconds)"}
-	}
+	// TED
+	// timestamp, err := strconv.ParseInt(commitmentRequestResultData.Timestamp, 10, 64)
+	// if err != nil {
+	// 	return nil, &jsonrpc.Error{Code: 32603, Message: "Internal error", Data: "Could not parse timestamp"}
+	// }
+	// now, err := strconv.ParseInt(commitmentRequestResultData.TimeSigned, 10, 64)
+	// if err != nil {
+	// 	return nil, &jsonrpc.Error{Code: 32603, Message: "Internal error", Data: "Could not parse timestamp"}
+	// }
+	// if time.Unix(now, 0).Before(time.Unix(timestamp, 0)) {
+	// 	return nil, &jsonrpc.Error{Code: 32603, Message: "Internal error", Data: "Node signed before timestamp"}
+	// }
+	// if time.Unix(now, 0).After(time.Unix(timestamp+60, 0)) {
+	// 	return nil, &jsonrpc.Error{Code: 32603, Message: "Internal error", Data: "Node took too long to sign (> 60 seconds)"}
+	// }
 
 	return node, nil
 }
@@ -208,13 +240,16 @@ func (c *CommitmentRequestResultData) FromString(data string) (bool, error) {
 func setUpJRPCHandler(suite *Suite) (*jsonrpc.MethodRepository, error) {
 	mr := jsonrpc.NewMethodRepository()
 
-	if err := mr.RegisterMethod(PingMethod, PingHandler{suite.EthSuite}, PingParams{}, PingResult{}); err != nil {
+	if err := mr.RegisterMethod(PingMethod, PingHandler{suite.EthSuite, suite}, PingParams{}, PingResult{}); err != nil {
 		return nil, err
 	}
 	if err := mr.RegisterMethod(ShareRequestMethod, ShareRequestHandler{suite, time.Now}, ShareRequestParams{}, ShareRequestResult{}); err != nil {
 		return nil, err
 	}
 	if err := mr.RegisterMethod(KeyAssignMethod, KeyAssignHandler{suite}, KeyAssignParams{}, KeyAssignResult{}); err != nil {
+		return nil, err
+	}
+	if err := mr.RegisterMethod(VerifierLookupMethod, VerifierLookupHandler{suite}, VerifierLookupParams{}, VerifierLookupResult{}); err != nil {
 		return nil, err
 	}
 	if err := mr.RegisterMethod(CommitmentRequestMethod, CommitmentRequestHandler{suite, time.Now}, CommitmentRequestParams{}, CommitmentRequestResult{}); err != nil {

@@ -8,10 +8,10 @@ import (
 	"net/http"
 	"testing"
 
+	"github.com/allaccessone/network/logging"
 	"github.com/gorilla/context"
 	"github.com/gorilla/mux"
 	"github.com/rs/cors"
-	"github.com/torusresearch/torus-public/logging"
 )
 
 func checkContextHandler(t *testing.T) func(http.ResponseWriter, *http.Request) {

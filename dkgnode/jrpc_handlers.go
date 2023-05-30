@@ -10,16 +10,16 @@ import (
 	"strings"
 	"time"
 
-	"github.com/torusresearch/torus-public/secp256k1"
+	"github.com/allaccessone/network/secp256k1"
 
+	"github.com/allaccessone/network/common"
+	"github.com/allaccessone/network/logging"
 	ethCmn "github.com/ethereum/go-ethereum/common"
 	cache "github.com/patrickmn/go-cache"
 	tmquery "github.com/tendermint/tendermint/libs/pubsub/query"
 	"github.com/tidwall/gjson"
 	"github.com/torusresearch/bijson"
 	"github.com/torusresearch/jsonrpc"
-	"github.com/torusresearch/torus-public/common"
-	"github.com/torusresearch/torus-public/logging"
 )
 
 func (h CommitmentRequestHandler) ServeJSONRPC(c context.Context, params *bijson.RawMessage) (interface{}, *jsonrpc.Error) {
@@ -27,7 +27,8 @@ func (h CommitmentRequestHandler) ServeJSONRPC(c context.Context, params *bijson
 	if err := jsonrpc.Unmarshal(params, &p); err != nil {
 		return nil, err
 	}
-	timestamp := p.Timestamp
+	// TED
+	// timestamp := p.Timestamp
 	tokenCommitment := p.TokenCommitment
 	verifierIdentifier := p.VerifierIdentifier
 
@@ -36,14 +37,15 @@ func (h CommitmentRequestHandler) ServeJSONRPC(c context.Context, params *bijson
 		return nil, &jsonrpc.Error{Code: 32603, Message: "Internal error", Data: "Incorrect message prefix"}
 	}
 
+	// TED
 	// check if timestamp has expired
-	sec, err := strconv.ParseInt(timestamp, 10, 64)
-	if err != nil {
-		return nil, &jsonrpc.Error{Code: 32603, Message: "Internal error", Data: "Could not parse timestamp"}
-	}
-	if h.TimeNow().After(time.Unix(sec+60, 0)) {
-		return nil, &jsonrpc.Error{Code: 32603, Message: "Internal error", Data: "Expired token (> 60 seconds)"}
-	}
+	// sec, err := strconv.ParseInt(timestamp, 10, 64)
+	// if err != nil {
+	// 	return nil, &jsonrpc.Error{Code: 32603, Message: "Internal error", Data: "Could not parse timestamp"}
+	// }
+	// if h.TimeNow().After(time.Unix(sec+60, 0)) {
+	// 	return nil, &jsonrpc.Error{Code: 32603, Message: "Internal error", Data: "Expired token (> 60 seconds)"}
+	// }
 
 	// check if tokenCommitment has been seen before for that particular verifierIdentifier
 	if h.suite.CacheSuite.TokenCaches[verifierIdentifier] == nil {
@@ -52,7 +54,8 @@ func (h CommitmentRequestHandler) ServeJSONRPC(c context.Context, params *bijson
 	tokenCache := h.suite.CacheSuite.TokenCaches[verifierIdentifier]
 	_, found := tokenCache.Get(tokenCommitment)
 	if found {
-		return nil, &jsonrpc.Error{Code: 32603, Message: "Internal error", Data: "Duplicate token found"}
+		// TED: disable cmt
+		// return nil, &jsonrpc.Error{Code: 32603, Message: "Internal error", Data: "Duplicate token found"}
 	}
 	tokenCache.Set(string(tokenCommitment), true, 1*time.Minute)
 
@@ -86,7 +89,10 @@ func (h PingHandler) ServeJSONRPC(c context.Context, params *bijson.RawMessage) 
 	}
 
 	return PingResult{
-		Message: h.ethSuite.NodeAddress.Hex(),
+		Message:   h.ethSuite.NodeAddress.Hex(),
+		NodePubX:  h.suite.EthSuite.NodePublicKey.X.Text(16),
+		NodePubY:  h.suite.EthSuite.NodePublicKey.Y.Text(16),
+		NodeIndex: h.suite.EthSuite.NodeIndex.Text(16),
 	}, nil
 }
 
@@ -140,9 +146,11 @@ func (h ShareRequestHandler) ServeJSONRPC(c context.Context, params *bijson.RawM
 				logging.Error("Could not validate signatures" + err.Error())
 			}
 		}
+		logging.Debugf("CHECKING IF SUBSCRIBE TO UPDATES %v", validSignatures)
+
 		// Check if we have threshold number of signatures
 		if len(validSignatures) < h.suite.Config.Threshold {
-			return nil, &jsonrpc.Error{Code: 32602, Message: "Internal error", Data: "Not enough valid signatures. Only " + strconv.Itoa(len(validSignatures)) + "valid signatures found."}
+			return nil, &jsonrpc.Error{Code: 32602, Message: "Internal error", Data: "line 145: Not enough valid signatures. Only " + strconv.Itoa(len(validSignatures)) + " valid signatures found." + strconv.Itoa(h.suite.Config.Threshold)}
 		}
 		// Find common data string, and filter valid signatures on the wrong data
 		// this is to prevent nodes from submitting valid signatures on wrong data
@@ -176,7 +184,7 @@ func (h ShareRequestHandler) ServeJSONRPC(c context.Context, params *bijson.RawM
 			}
 		}
 		if len(validCommonSignatures) < h.suite.Config.Threshold {
-			return nil, &jsonrpc.Error{Code: 32602, Message: "Internal error", Data: "Not enough valid signatures on the same data, " + strconv.Itoa(len(validCommonSignatures)) + " valid signatures."}
+			// return nil, &jsonrpc.Error{Code: 32602, Message: "Internal error", Data: "line 179: Not enough valid signatures on the same data, " + strconv.Itoa(len(validCommonSignatures)) + " valid signatures." + strconv.Itoa(h.suite.Config.Threshold)}
 		}
 		var commonData = strings.Split(commonDataString, "|")
 		var commonTokenCommitment = commonData[1]
@@ -191,6 +199,8 @@ func (h ShareRequestHandler) ServeJSONRPC(c context.Context, params *bijson.RawM
 
 		// verify that hash of token = tokenCommitment
 		cleanedToken := verifier.CleanToken(parsedVerifierParams.Token)
+		logging.Debugf("hex.EncodeToString(secp256k1.Keccak256([]byte(cleanedToken))): %s", hex.EncodeToString(secp256k1.Keccak256([]byte(cleanedToken))))
+		logging.Debugf("commonTokenCommitment: %s", commonTokenCommitment)
 		if hex.EncodeToString(secp256k1.Keccak256([]byte(cleanedToken))) != commonTokenCommitment {
 			return nil, &jsonrpc.Error{Code: 32602, Message: "Internal error", Data: "Token commitment and token are not compatible"}
 		}
@@ -225,10 +235,12 @@ func (h ShareRequestHandler) ServeJSONRPC(c context.Context, params *bijson.RawM
 
 	response := ShareRequestResult{}
 	for _, index := range allKeyIndexes {
-
 		// TODO: move code out into another function
 		// check if we have enough validTokens according to Access Structure
 		pubKeyAccessStructure := h.suite.ABCIApp.state.KeyMapping[index.Text(16)]
+		logging.Debugf("index :%s %s", index.String(), index.Text(16))
+		logging.Debugf("pubKeyAccessStructure: %s %s", pubKeyAccessStructure.PublicKey.X.Text(16), pubKeyAccessStructure.PublicKey.Y.Text(16))
+
 		validCount := 0
 		for verifieridentifier, verifierIDs := range pubKeyAccessStructure.Verifiers {
 			for _, verifierID := range verifierIDs {
@@ -240,14 +252,25 @@ func (h ShareRequestHandler) ServeJSONRPC(c context.Context, params *bijson.RawM
 				}
 			}
 		}
-		si, _, _, err := h.suite.DBSuite.Instance.RetrieveCompletedShare(*index)
+		si, _, pk, err := h.suite.DBSuite.Instance.RetrieveCompletedShare(*index)
+		logging.Debugf("pkpkpkpkpk: %s %s", pk.X.Text(16), pk.Y.Text(16))
+		addr, _ := common.PointToEthAddress(*pk)
+		logging.Debugf("PointToEthAddress: %s", addr.String())
 		if err != nil {
 			return nil, &jsonrpc.Error{Code: 32603, Message: "Internal error", Data: "could not retrieve completed share"}
 		}
 
 		if validCount >= pubKeyAccessStructure.Threshold { // if we have enough authenticators we return Si
+
 			keyAssignment := KeyAssignment{
+				// TED
 				KeyAssignmentPublic: pubKeyAccessStructure,
+			}
+			keyAssignment.KeyAssignmentPublic = KeyAssignmentPublic{
+				Index:     *index,
+				PublicKey: common.Point{X: pk.X, Y: pk.Y},
+				Threshold: pubKeyAccessStructure.Threshold,
+				Verifiers: pubKeyAccessStructure.Verifiers,
 			}
 			keyAssignment.Share = *si
 			response.Keys = append(response.Keys, keyAssignment)
@@ -354,6 +377,70 @@ func (h KeyAssignHandler) ServeJSONRPC(c context.Context, params *bijson.RawMess
 			PubShareX: pk.X.Text(16),
 			PubShareY: pk.Y.Text(16),
 			Address:   addr.String(),
+			// TED
+			PubKeyX: pk.X.Text(16),
+			PubKeyY: pk.Y.Text(16),
+		})
+	}
+
+	return result, nil
+}
+
+func (h VerifierLookupHandler) ServeJSONRPC(c context.Context, params *bijson.RawMessage) (interface{}, *jsonrpc.Error) {
+	var p VerifierLookupParams
+	if err := jsonrpc.Unmarshal(params, &p); err != nil {
+		return nil, err
+	}
+	logging.Debug("CHECKING IF EMAIL IS PROVIDED")
+	// no email provided TODO: email validation/ ddos protection
+	if p.VerifierID == "" {
+		return nil, &jsonrpc.Error{Code: 32602, Message: "Input error", Data: "VerifierID is empty"}
+	}
+	logging.Debug("CHECKING IF CAN GET EMAIL ADDRESS")
+
+	// check if verifier is valid
+	_, err := h.suite.DefaultVerifier.Lookup(p.Verifier)
+	if err != nil {
+		return nil, &jsonrpc.Error{Code: 32602, Message: "Input error", Data: "Verifier not supported"}
+	}
+
+	res, err := h.suite.BftSuite.BftRPC.ABCIQuery("GetIndexesFromVerifierID", []byte(p.VerifierID))
+	if err != nil {
+		return nil, &jsonrpc.Error{Code: 32603, Message: "Internal error", Data: "Failed to check if email exists after assignment: " + err.Error()}
+	}
+	if res.Response.Code == 10 {
+		return nil, &jsonrpc.Error{Code: 32603, Message: "Internal error", Data: "Failed to find email after it has been assigned: " + res.Response.Info}
+	}
+	var keyIndexes []big.Int
+	err = bijson.Unmarshal(res.Response.Value, &keyIndexes)
+	if err != nil {
+		return nil, &jsonrpc.Error{Code: 32603, Message: "Internal error", Data: fmt.Sprintf("could not parse keyindex list keyAssign for %s error: %v", string(res.Response.Value), err)}
+	}
+
+	result := KeyAssignResult{}
+	publicKeys := make([]common.Point, 0)
+	addresses := make([]ethCmn.Address, 0)
+	for _, index := range keyIndexes {
+		_, _, pk, err := h.suite.DBSuite.Instance.RetrieveCompletedShare(index)
+		if err != nil {
+			return nil, &jsonrpc.Error{Code: 32603, Message: fmt.Sprintf("Could not find address to key index error: %v", err)}
+		}
+		publicKeys = append(publicKeys, *pk)
+		//form address eth
+		addr, err := common.PointToEthAddress(*pk)
+		if err != nil {
+			logging.Debug("derived user pub key has issues with address")
+			return nil, &jsonrpc.Error{Code: 32603, Message: fmt.Sprintf("Internal error: %v", err)}
+		}
+		addresses = append(addresses, *addr)
+		result.Keys = append(result.Keys, KeyAssignItem{
+			KeyIndex:  index.Text(16),
+			PubShareX: pk.X.Text(16),
+			PubShareY: pk.Y.Text(16),
+			// TED
+			PubKeyX: pk.X.Text(16),
+			PubKeyY: pk.Y.Text(16),
+			Address: addr.String(),
 		})
 	}
 

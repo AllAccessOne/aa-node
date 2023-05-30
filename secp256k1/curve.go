@@ -3,8 +3,8 @@ package secp256k1
 import (
 	"math/big"
 
+	"github.com/allaccessone/network/common"
 	secp256k1 "github.com/btcsuite/btcd/btcec"
-	"github.com/torusresearch/torus-public/common"
 	"golang.org/x/crypto/sha3"
 )
 

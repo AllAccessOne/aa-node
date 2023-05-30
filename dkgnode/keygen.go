@@ -8,7 +8,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/torusresearch/torus-public/idmutex"
+	"github.com/allaccessone/network/idmutex"
 
 	// "log"
 	"crypto/ecdsa"
@@ -23,10 +23,10 @@ import (
 	tmcmn "github.com/tendermint/tendermint/libs/common"
 	"github.com/torusresearch/bijson"
 
-	// "github.com/torusresearch/torus-public/common"
-	"github.com/torusresearch/torus-public/keygen"
-	"github.com/torusresearch/torus-public/logging"
-	"github.com/torusresearch/torus-public/telemetry"
+	// "github.com/allaccessone/network/common"
+	"github.com/allaccessone/network/keygen"
+	"github.com/allaccessone/network/logging"
+	"github.com/allaccessone/network/telemetry"
 )
 
 type KeygenSuite struct {
@@ -64,7 +64,7 @@ type keygenConstants struct {
 }
 
 type keygenID string // "startingIndex-endingIndex"
-//TODO : Change startingIndex and endingIndex in node to big.Int
+// TODO : Change startingIndex and endingIndex in node to big.Int
 func getKeygenID(shareStartingIndex int, shareEndingIndex int) keygenID {
 	return keygenID(keygenConsts.RequestPrefix + strconv.FormatInt(int64(shareStartingIndex), 16) + "|" + strconv.FormatInt(int64(shareEndingIndex), 16))
 }
@@ -486,6 +486,7 @@ func (kt *KEYGENTransport) SendKEYGENSend(msg keygen.KEYGENSend, nodeIndex big.I
 }
 
 func (kt *KEYGENTransport) SendKEYGENEcho(msg keygen.KEYGENEcho, nodeIndex big.Int) error {
+	logging.Debugf("TED SendKEYGENEcho")
 	// cater to if sending to self
 	if nodeIndex.Cmp(kt.Protocol.suite.EthSuite.NodeIndex) == 0 {
 		go func() {
@@ -509,6 +510,7 @@ func (kt *KEYGENTransport) SendKEYGENEcho(msg keygen.KEYGENEcho, nodeIndex big.I
 }
 
 func (kt *KEYGENTransport) SendKEYGENReady(msg keygen.KEYGENReady, nodeIndex big.Int) error {
+	logging.Debugf("TED SendKEYGENReady")
 	// cater to if sending to self
 	if nodeIndex.Cmp(kt.Protocol.suite.EthSuite.NodeIndex) == 0 {
 		go func() {
@@ -532,6 +534,7 @@ func (kt *KEYGENTransport) SendKEYGENReady(msg keygen.KEYGENReady, nodeIndex big
 }
 
 func (kt *KEYGENTransport) BroadcastInitiateKeygen(msg keygen.KEYGENInitiate) error {
+	logging.Debugf("TED BroadcastInitiateKeygen")
 	plBytes, err := bijson.Marshal(msg)
 	if err != nil {
 		return errors.New("Could not marshal: " + err.Error())
@@ -559,6 +562,7 @@ func (kt *KEYGENTransport) BroadcastInitiateKeygen(msg keygen.KEYGENInitiate) er
 }
 
 func (kt *KEYGENTransport) BroadcastKEYGENDKGComplete(msg keygen.KEYGENDKGComplete) error {
+	logging.Debugf("TED BroadcastKEYGENDKGComplete")
 	plBytes, err := bijson.Marshal(msg)
 	if err != nil {
 		return errors.New("Could not marshal: " + err.Error())
@@ -584,6 +588,7 @@ func (kt *KEYGENTransport) BroadcastKEYGENDKGComplete(msg keygen.KEYGENDKGComple
 }
 
 func (kt *KEYGENTransport) prepAndSendKeygenMsg(pl []byte, msgType string, nodeIndex big.Int) error {
+	logging.Debugf("TED prepAndSendKeygenMsg")
 	// Derive ID From Index
 	// TODO: this should be exported once nodelist becomes more modular
 	var nodeId peer.ID

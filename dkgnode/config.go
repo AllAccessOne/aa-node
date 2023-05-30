@@ -8,8 +8,8 @@ import (
 	"io/ioutil"
 	"os"
 
+	"github.com/allaccessone/network/logging"
 	"github.com/caarlos0/env"
-	"github.com/torusresearch/torus-public/logging"
 )
 
 type Config struct {

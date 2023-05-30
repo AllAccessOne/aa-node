@@ -4,18 +4,18 @@ import (
 	"errors"
 	"reflect"
 
+	"github.com/allaccessone/network/common"
+	"github.com/allaccessone/network/keygen"
+	"github.com/allaccessone/network/logging"
 	"github.com/tendermint/tendermint/rpc/client"
 	"github.com/torusresearch/bijson"
-	"github.com/torusresearch/torus-public/common"
-	"github.com/torusresearch/torus-public/keygen"
-	"github.com/torusresearch/torus-public/logging"
 )
 
 type BftRPC struct {
 	client.Client
 }
 
-//BFT Transactions are registered under this interface
+// BFT Transactions are registered under this interface
 type BFTTx interface {
 	//Create byte type and append RLP encoded tx
 	// PrepareBFTTx() ([]byte, error)
@@ -104,8 +104,8 @@ func getType(myvar interface{}) string {
 	}
 }
 
-//BroadcastTxSync Wrapper (input should be RLP encoded) to tendermint.
-//All transactions are appended to a torus signature hexbytes(mug00 + versionNo)
+// BroadcastTxSync Wrapper (input should be RLP encoded) to tendermint.
+// All transactions are appended to a torus signature hexbytes(mug00 + versionNo)
 // e.g mug00 => 6d75673030
 func (bftrpc BftRPC) Broadcast(tx DefaultBFTTxWrapper) (*common.Hash, error) {
 	// prepare transaction with type and rlp encoding
@@ -132,7 +132,7 @@ func (bftrpc BftRPC) Broadcast(tx DefaultBFTTxWrapper) (*common.Hash, error) {
 	return &common.Hash{response.Hash.Bytes()}, nil
 }
 
-//Retrieves tx from the bft and gives back results. Takes off the donut
+// Retrieves tx from the bft and gives back results. Takes off the donut
 func (bftrpc BftRPC) Retrieve(hash []byte, txStruct BFTTxWrapper) (err error) {
 	result, err := bftrpc.Tx(hash, false)
 	if err != nil {

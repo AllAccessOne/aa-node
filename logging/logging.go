@@ -6,7 +6,7 @@ import (
 	"os"
 	"time"
 
-	"github.com/torusresearch/torus-public/idmutex"
+	"github.com/allaccessone/network/idmutex"
 )
 
 // LevelMapping maps LogLevels into expected keys

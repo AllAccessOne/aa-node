@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/torusresearch/torus-public/dkgnode"
+	"github.com/allaccessone/network/dkgnode"
 )
 
 func main() {

@@ -5,11 +5,11 @@ import (
 	"io/ioutil"
 	"log"
 
+	"github.com/allaccessone/network/logging"
 	uuid "github.com/google/uuid"
 	inet "github.com/libp2p/go-libp2p-net"
 	peer "github.com/libp2p/go-libp2p-peer"
 	"github.com/torusresearch/bijson"
-	"github.com/torusresearch/torus-public/logging"
 )
 
 // pattern: /protocol-name/request-or-response-message/version

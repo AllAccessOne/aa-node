@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/allaccessone/network/logging"
 	tmlog "github.com/tendermint/tendermint/libs/log"
-	"github.com/torusresearch/torus-public/logging"
 )
 
 type NoLogger struct {

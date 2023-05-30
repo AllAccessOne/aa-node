@@ -3,8 +3,8 @@ package dkgnode
 import (
 	"time"
 
+	"github.com/allaccessone/network/logging"
 	"github.com/looplab/fsm"
-	"github.com/torusresearch/torus-public/logging"
 )
 
 var LocalStatusConstants = localStatusConstants{States: lsStates, Events: lsEvents}

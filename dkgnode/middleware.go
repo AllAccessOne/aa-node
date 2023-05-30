@@ -6,10 +6,10 @@ import (
 	"io/ioutil"
 	"net/http"
 
+	"github.com/allaccessone/network/logging"
+	"github.com/allaccessone/network/telemetry"
 	"github.com/gorilla/context"
 	"github.com/torusresearch/bijson"
-	"github.com/torusresearch/torus-public/logging"
-	"github.com/torusresearch/torus-public/telemetry"
 )
 
 func augmentRequestMiddleware(next http.Handler) http.Handler {

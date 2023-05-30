@@ -3,9 +3,9 @@ package dkgnode
 import (
 	"testing"
 
+	"github.com/allaccessone/network/secp256k1"
 	ethCrypto "github.com/ethereum/go-ethereum/crypto"
 	"github.com/stretchr/testify/assert"
-	"github.com/torusresearch/torus-public/secp256k1"
 )
 
 func TestECDSASignAndVerify(t *testing.T) {

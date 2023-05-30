@@ -15,7 +15,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "ganache-cli": "^6.4.3"
+    "ganache-cli": "^6.4.3",
+    "truffle-hdwallet-provider": "^1.0.17"
   },
   "devDependencies": {
     "eslint": "^5.16.0",
@@ -29,7 +30,6 @@
     "eslint-plugin-standard": "^4.0.0",
     "solhint": "^2.0.0",
     "truffle": "^5.0.15",
-    "truffle-hdwallet-provider": "1.0.8",
     "web3-provider-engine": "^15.0.0"
   }
 }

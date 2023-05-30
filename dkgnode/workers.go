@@ -5,14 +5,14 @@ import (
 	"math/big"
 	"strings"
 
+	"github.com/allaccessone/network/logging"
 	"github.com/tendermint/tendermint/p2p"
-	"github.com/torusresearch/torus-public/logging"
 )
 
 // "github.com/tendermint/tendermint/p2p"
-// "github.com/torusresearch/torus-public/logging"
+// "github.com/allaccessone/network/logging"
 // "strings"
-// // "github.com/torusresearch/torus-public/pss"
+// // "github.com/allaccessone/network/pss"
 // "math/big"
 
 func keyGenWorker(suite *Suite, keyGenMonitorMsgs <-chan KeyGenUpdates) {

@@ -9,14 +9,14 @@ import (
 	"errors"
 	"math/big"
 
+	"github.com/allaccessone/network/logging"
+	"github.com/allaccessone/network/secp256k1"
+	nodelist "github.com/allaccessone/network/solidity/goContracts"
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/types"
 	ethCrypto "github.com/ethereum/go-ethereum/crypto"
 	"github.com/ethereum/go-ethereum/ethclient"
-	"github.com/torusresearch/torus-public/logging"
-	"github.com/torusresearch/torus-public/secp256k1"
-	nodelist "github.com/torusresearch/torus-public/solidity/goContracts"
 )
 
 type EthSuite struct {

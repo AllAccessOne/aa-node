@@ -11,12 +11,12 @@ import (
 
 	core_types "github.com/tendermint/tendermint/rpc/core/types"
 
+	"github.com/allaccessone/network/auth"
+	"github.com/allaccessone/network/common"
+	"github.com/allaccessone/network/keygen"
+	"github.com/allaccessone/network/mocks"
+	"github.com/allaccessone/network/secp256k1"
 	abci "github.com/tendermint/tendermint/abci/types"
-	"github.com/torusresearch/torus-public/auth"
-	"github.com/torusresearch/torus-public/common"
-	"github.com/torusresearch/torus-public/keygen"
-	"github.com/torusresearch/torus-public/mocks"
-	"github.com/torusresearch/torus-public/secp256k1"
 
 	cache "github.com/patrickmn/go-cache"
 	"github.com/torusresearch/bijson"

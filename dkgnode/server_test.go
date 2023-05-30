@@ -1,7 +1,7 @@
 package dkgnode
 
 import (
-	"github.com/torusresearch/torus-public/auth"
+	"github.com/allaccessone/network/auth"
 )
 
 const localTestVerifierKey = "notBluBlu"

@@ -9,14 +9,14 @@ import (
 	"syscall"
 	"time"
 
+	"github.com/allaccessone/network/auth"
+	"github.com/allaccessone/network/logging"
+	"github.com/allaccessone/network/telemetry"
 	tmbtcec "github.com/tendermint/btcd/btcec"
 	tmsecp "github.com/tendermint/tendermint/crypto/secp256k1"
 	tmnode "github.com/tendermint/tendermint/node"
 	"github.com/tendermint/tendermint/p2p"
 	tmtypes "github.com/tendermint/tendermint/types"
-	"github.com/torusresearch/torus-public/auth"
-	"github.com/torusresearch/torus-public/logging"
-	"github.com/torusresearch/torus-public/telemetry"
 )
 
 const DefaultConfigPath = "/.torus/config.json"

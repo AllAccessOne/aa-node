@@ -1,10 +1,11 @@
 package keygen
 
 import (
-	"github.com/torusresearch/torus-public/idmutex"
 	"math/big"
 
-	"github.com/torusresearch/torus-public/logging"
+	"github.com/allaccessone/network/idmutex"
+
+	"github.com/allaccessone/network/logging"
 )
 
 // Here we store by Key index to allow for faster fetching (less iteration) when accessing the buffer
@@ -21,7 +22,7 @@ type KEYGENMsgLog struct {
 
 }
 
-//Initialize message buffer
+// Initialize message buffer
 func (buf *KEYGENBuffer) InitializeMsgBuffer(startIndex big.Int, numOfKeys int, nodeList []big.Int) {
 	buf.Lock()
 	defer buf.Unlock()
@@ -77,7 +78,7 @@ func (buf *KEYGENBuffer) StoreKEYGENReady(msg KEYGENReady, from big.Int) error {
 // 	return nil
 // }
 
-//TODO: Handle failed message
+// TODO: Handle failed message
 // Retrieve from the message buffer and iterate over messages
 func (buf *KEYGENBuffer) RetrieveKEYGENSends(keyIndex big.Int, dealer big.Int) *KEYGENSend {
 	buf.Lock()

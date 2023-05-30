@@ -2,12 +2,14 @@ package dkgnode
 
 import (
 	"errors"
-	"github.com/patrickmn/go-cache"
-	"github.com/torusresearch/torus-public/common"
-	"github.com/torusresearch/torus-public/db"
-	"github.com/torusresearch/torus-public/keygen"
 	"math/big"
-	// "github.com/torusresearch/torus-public/logging"
+
+	"github.com/allaccessone/network/common"
+	"github.com/allaccessone/network/db"
+	"github.com/allaccessone/network/keygen"
+	"github.com/patrickmn/go-cache"
+
+	// "github.com/allaccessone/network/logging"
 	"time"
 )
 

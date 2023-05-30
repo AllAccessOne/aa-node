@@ -4,7 +4,7 @@ import (
 	"errors"
 	"math/big"
 
-	"github.com/torusresearch/torus-public/common"
+	"github.com/allaccessone/network/common"
 )
 
 // // Check if its is a qualified node in this keygen instance

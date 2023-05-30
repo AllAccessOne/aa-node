@@ -3,9 +3,9 @@ package pvss
 import (
 	"math/big"
 
+	"github.com/allaccessone/network/common"
+	"github.com/allaccessone/network/secp256k1"
 	"github.com/jinzhu/copier"
-	"github.com/torusresearch/torus-public/common"
-	"github.com/torusresearch/torus-public/secp256k1"
 )
 
 // Mobile Proactive Secret Sharing

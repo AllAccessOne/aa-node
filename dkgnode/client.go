@@ -15,17 +15,17 @@ import (
 	// "github.com/Rican7/retry"
 	// "github.com/Rican7/retry/backoff"
 	// "github.com/Rican7/retry/strategy"
+	"github.com/allaccessone/network/common"
+	"github.com/allaccessone/network/logging"
 	tmconfig "github.com/tendermint/tendermint/config"
 	tmsecp "github.com/tendermint/tendermint/crypto/secp256k1"
 	tmnode "github.com/tendermint/tendermint/node"
 	"github.com/tendermint/tendermint/p2p"
 	"github.com/tendermint/tendermint/privval"
 	tmtypes "github.com/tendermint/tendermint/types"
-	"github.com/torusresearch/torus-public/common"
-	"github.com/torusresearch/torus-public/logging"
-	// "github.com/torusresearch/torus-public/pvss"
-	// "github.com/torusresearch/torus-public/secp256k1"
-	// "github.com/torusresearch/torus-public/telemetry"
+	// "github.com/allaccessone/network/pvss"
+	// "github.com/allaccessone/network/secp256k1"
+	// "github.com/allaccessone/network/telemetry"
 )
 
 type Message struct {

@@ -4,8 +4,8 @@ import (
 	"math/big"
 	"testing"
 
+	"github.com/allaccessone/network/secp256k1"
 	"github.com/stretchr/testify/assert"
-	"github.com/torusresearch/torus-public/secp256k1"
 	xlabcommon "github.com/xlab-si/emmy/crypto/common"
 )
 
