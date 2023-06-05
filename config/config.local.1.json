@@ -13,6 +13,7 @@
   "ipAddress": "192.167.10.2",
   "register": true,
   "initEpoch": 1,
-  "debug":true
-}
+  "debug": true,
 
+  "googleClientID": "791661831404-52fhrtepbirg3udakm9e6mt9rvl7jfr1.apps.googleusercontent.com"
+}

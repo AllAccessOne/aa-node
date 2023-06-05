@@ -97,12 +97,12 @@ func (g *GoogleVerifier) VerifyRequestIdentity(rawPayload *bijson.RawMessage) (b
 	// 	return false, "", errors.New("timesigned is more than 60 seconds ago " + timeSigned.String())
 	// }
 
-	// if strings.Compare(g.clientID, body.Azp) != 0 {
-	// 	return false, "", errors.New("azip is not clientID " + body.Azp + " " + g.clientID)
-	// }
-	// if strings.Compare(p.VerifierID, body.Email) != 0 {
-	// 	return false, "", errors.New("email not equal to body.email " + p.VerifierID + " " + body.VerifierID)
-	// }
+	if strings.Compare(g.clientID, body.Azp) != 0 {
+		return false, "", errors.New("azip is not clientID " + body.Azp + " " + g.clientID)
+	}
+	if strings.Compare(p.VerifierID, body.Email) != 0 {
+		return false, "", errors.New("email not equal to body.email " + p.VerifierID + " " + body.Email)
+	}
 
 	return true, p.VerifierID, nil
 }

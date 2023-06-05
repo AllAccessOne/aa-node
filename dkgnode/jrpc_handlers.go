@@ -408,8 +408,9 @@ func (h VerifierLookupHandler) ServeJSONRPC(c context.Context, params *bijson.Ra
 	if err != nil {
 		return nil, &jsonrpc.Error{Code: 32603, Message: "Internal error", Data: "Failed to check if email exists after assignment: " + err.Error()}
 	}
+	// TED: Disable throw error if the key not existed
 	if res.Response.Code == 10 {
-		return nil, &jsonrpc.Error{Code: 32603, Message: "Internal error", Data: "Failed to find email after it has been assigned: " + res.Response.Info}
+		return nil, &jsonrpc.Error{Code: 32603, Message: "Internal error", Data: "Verifier + VerifierID has not yet been assigned could not retrieveVerifierToKeyIndex error: " + res.Response.Info}
 	}
 	var keyIndexes []big.Int
 	err = bijson.Unmarshal(res.Response.Value, &keyIndexes)
