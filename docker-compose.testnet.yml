@@ -10,7 +10,7 @@ services:
       localnet:
 
   node_one:
-    image: docker.io/nvkhiem2016/allaccessone-node:latest
+    image: nvkhiem2016/allaccessone-node:latest
     ports:
       - "26657-26658:26656-26657"
       - "1080"
@@ -25,7 +25,7 @@ services:
       localnet:
         ipv4_address: 192.167.10.2
   node_two:
-    image: docker.io/nvkhiem2016/allaccessone-node:latest
+    image: nvkhiem2016/allaccessone-node:latest
     ports:
       - "1080"
       - "26659-26660:26656-26657"
@@ -41,7 +41,7 @@ services:
         ipv4_address: 192.167.10.3
 
   node_three:
-    image: docker.io/nvkhiem2016/allaccessone-node:latest
+    image: nvkhiem2016/allaccessone-node:latest
     ports:
       - "1080"
       - "26661-26662:26656-26657"
@@ -56,7 +56,7 @@ services:
       localnet:
         ipv4_address: 192.167.10.4
   node_four:
-    image: docker.io/nvkhiem2016/allaccessone-node:latest
+    image: nvkhiem2016/allaccessone-node:latest
     ports:
       - "1080"
       - "26663-26664:26656-26657"
@@ -71,7 +71,7 @@ services:
       localnet:
         ipv4_address: 192.167.10.5
   node_five:
-    image: docker.io/nvkhiem2016/allaccessone-node:latest
+    image: nvkhiem2016/allaccessone-node:latest
     ports:
       - "1080"
       - "26665-26666:26656-26657"
