@@ -7,6 +7,6 @@ module.exports = async function(deployer, network, accounts) {
   console.log("🚀 ~ file: 4_get_index_node.js:7 ~ module.exports=function ~ nodeAddresses:", nodeAddresses)
   for await (const address of nodeAddresses) {
     const node = await NodeListInstance.nodeDetails(address);
-    console.log("🚀 ~ file: 4_get_index_node.js:9 ~ forawait ~ node:", address,node.position.toString())
+    console.log("🚀 ~ file: 4_get_index_node.js:9 ~ forawait ~ node:", address,node.declaredIp)
   }
 }

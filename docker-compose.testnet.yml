@@ -17,7 +17,7 @@ services:
       - "7001:8080"
       - "8000:8000"
     volumes:
-      - ./config/config.local.1.json:/.torus/config.json
+      - ./config/config.testnet.1.json:/.torus/config.json
       - ./tests/openssl:/.torus/openssl
     links:
       - ganache
@@ -32,7 +32,7 @@ services:
       - "7002:8080"
       - "8001:8001"
     volumes:
-      - ./config/config.local.2.json:/.torus/config.json
+      - ./config/config.testnet.2.json:/.torus/config.json
       - ./tests/openssl:/.torus/openssl
     links:
       - ganache
@@ -49,7 +49,7 @@ services:
       - "8002:8002"
     volumes:
       - ./tests/openssl:/.torus/openssl
-      - ./config/config.local.3.json:/.torus/config.json
+      - ./config/config.testnet.3.json:/.torus/config.json
     links:
       - ganache
     networks:
@@ -63,7 +63,7 @@ services:
       - "7004:8080"
       - "8003:8003"
     volumes:
-      - ./config/config.local.4.json:/.torus/config.json
+      - ./config/config.testnet.4.json:/.torus/config.json
       - ./tests/openssl:/.torus/openssl
     links:
       - ganache
@@ -78,7 +78,7 @@ services:
       - "7005:8080"
       - "8004:8004"
     volumes:
-      - ./config/config.local.5.json:/.torus/config.json
+      - ./config/config.testnet.5.json:/.torus/config.json
       - ./tests/openssl:/.torus/openssl
     links:
       - ganache
