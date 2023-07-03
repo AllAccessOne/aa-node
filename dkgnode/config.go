@@ -35,6 +35,7 @@ type Config struct {
 	CPUProfileToFile  string `json:"cpuProfile" env:"CPU_PROFILE"`
 	IsDebug           bool   `json:"debug" env:"DEBUG"`
 	ProvidedIPAddress string `json:"ipAddress" env:"IP_ADDRESS"`
+	Endpoint          string `json:"endpoint" env:"ENDPOINT"` // Save register in smart contract
 	LogLevel          string `json:"loglevel" env:"LOG_LEVEL"`
 
 	ServeUsingTLS    bool   `json:"USE_TLS" env:"USE_TLS"`
@@ -195,8 +196,7 @@ func loadConfig(configPath string) *Config {
 
 	if conf.ProvidedIPAddress != "" {
 		logging.Infof("Running on Specified IP Address: %s", conf.ProvidedIPAddress)
-		// conf.MainServerAddress = conf.ProvidedIPAddress + ":" + conf.HttpServerPort
-		conf.MainServerAddress = conf.ProvidedIPAddress
+		conf.MainServerAddress = conf.ProvidedIPAddress + ":" + conf.HttpServerPort // For local
 		conf.P2PListenAddress = fmt.Sprintf(conf.P2PListenAddress)
 	}
 

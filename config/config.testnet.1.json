@@ -9,11 +9,12 @@
   "abciserver": "tcp://0.0.0.0:8010",
   "tmp2plistenaddress": "tcp://0.0.0.0:26657",
   "p2plistenaddress": "/ip4/192.167.10.2/tcp/1080",
-  "keysperepoch": 10,
-  "ipAddress": "https://jbhxyurq6c.execute-api.ap-southeast-1.amazonaws.com/node0",
+  "keysperepoch": 15,
+  "ipAddress": "192.167.10.2",
   "register": true,
   "initEpoch": 1,
   "debug": true,
-
+  
+  "endpoint": "https://jbhxyurq6c.execute-api.ap-southeast-1.amazonaws.com/node0",
   "googleClientID": "791661831404-52fhrtepbirg3udakm9e6mt9rvl7jfr1.apps.googleusercontent.com"
 }
