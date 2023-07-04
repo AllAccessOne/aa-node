@@ -35,7 +35,6 @@ type Config struct {
 	CPUProfileToFile  string `json:"cpuProfile" env:"CPU_PROFILE"`
 	IsDebug           bool   `json:"debug" env:"DEBUG"`
 	ProvidedIPAddress string `json:"ipAddress" env:"IP_ADDRESS"`
-	Endpoint          string `json:"endpoint" env:"ENDPOINT"` // Save register in smart contract
 	LogLevel          string `json:"loglevel" env:"LOG_LEVEL"`
 
 	ServeUsingTLS    bool   `json:"USE_TLS" env:"USE_TLS"`
@@ -45,6 +44,7 @@ type Config struct {
 	ServerCert       string `json:"serverCert" env:"SERVER_CERT"`
 	ServerKey        string `json:"serverKey" env:"SERVER_KEY"`
 
+	Endpoint string `json:"endpoint" env:"ENDPOINT"` // Save register in smart contract
 	// GoogleClientID is used for oauth verification.
 	GoogleClientID string `json:"googleClientID" env:"GOOGLE_CLIENT_ID"`
 }

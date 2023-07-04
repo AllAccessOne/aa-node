@@ -37,6 +37,7 @@ func whitelistWorker(suite *Suite, tmNodeKey *p2p.NodeKey, whitelistMonitorMsgs 
 			}
 			externalAddr := "tcp://" + suite.Config.ProvidedIPAddress + ":" + strings.Split(suite.Config.TMP2PListenAddress, ":")[2]
 			logging.Infof("Registering node with %v %v", suite.Config.MainServerAddress, p2p.IDAddressString(tmNodeKey.ID(), externalAddr))
+			logging.Infof("Endpoint http jrpc %v", suite.Config.Endpoint)
 			_, err := suite.EthSuite.registerNode(*big.NewInt(int64(whitelistMonitorMsg.Payload.(int))), suite.Config.Endpoint, p2p.IDAddressString(tmNodeKey.ID(), externalAddr), suite.P2PSuite.HostAddress.String())
 			if err != nil {
 				logging.Fatal(err.Error())
